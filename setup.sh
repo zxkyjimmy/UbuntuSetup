@@ -23,6 +23,7 @@ sudo sed -E 's;APT::Periodic::Unattended-Upgrade "1"\;;APT::Periodic::Unattended
 step "Configuring git"
 git config --global user.name "Yen-Chi Chen"
 git config --global user.email "zxkyjimmy@gmail.com"
+git config --global pull.rebase false
 
 step "Get useful commands"
 sudo apt update
@@ -89,7 +90,7 @@ conda init zsh
 conda config --set auto_activate_base false
 
 step "Get CUDA"
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.0-1_all.deb
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb
 sudo dpkg -i cuda-keyring_1.0-1_all.deb
 sudo apt update
 sudo apt install -y cuda-drivers
@@ -98,33 +99,23 @@ sudo apt install -y libcudnn8 libcudnn8-dev
 sudo sed -E 's;PATH="?(.+)";PATH="/usr/local/cuda/bin:\1";g' -i /etc/environment
 
 step "Install Bazel"
-sudo apt install -y curl gnupg
-curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel.gpg
-sudo mv bazel.gpg /etc/apt/trusted.gpg.d/
-echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+sudo apt install -y apt-transport-https curl gnupg
+curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel-archive-keyring.gpg
+sudo mv bazel-archive-keyring.gpg /usr/share/keyrings
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
 sudo apt update
 sudo apt install -y bazel
 
 step "Install Podman"
-. /etc/os-release
-echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/Release.key | sudo apt-key add -
 sudo apt update
 sudo apt upgrade -y
 sudo apt install -y podman
 sudo sed -E 's;# unqualified-search-registries = \["example.com"\];unqualified-search-registries = \["docker.io"\];1' -i /etc/containers/registries.conf
 
-step "Rootless podman with OverlayFS"
-sudo apt install -y fuse-overlayfs
-mkdir -p ~/.config/containers
-cp /etc/containers/storage.conf ~/.config/containers
-sed -E 's;#?(mount_program =).*;\1 "/usr/bin/fuse-overlayfs";g' -i ~/.config/containers/storage.conf
-sed -E 's;runroot = ?(.+);# runroot = \1;g' -i ~/.config/containers/storage.conf
-sed -E 's;graphroot = ?(.+);# graphroot = \1;g' -i ~/.config/containers/storage.conf
-
 step "Install nvidia-container-runtime"
-curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \
-  sudo apt-key add -
+curl -fsSL https://nvidia.github.io/nvidia-container-runtime/gpgkey | \
+  gpg --dearmor > nvidia-container-runtime.gpg
+sudo mv nvidia-container-runtime.gpg /etc/apt/trusted.gpg.d/
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \
   sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
