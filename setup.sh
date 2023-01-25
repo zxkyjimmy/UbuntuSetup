@@ -27,12 +27,14 @@ git config --global pull.rebase false
 
 step "Get useful commands"
 sudo apt update
-sudo apt install -y git curl zsh wget htop vim tree openssh-server lm-sensors \
+sudo apt install -y nala
+sudo nala update
+sudo nala install -y git curl zsh wget htop vim tree openssh-server lm-sensors \
                     cmake tmux python3-pip python-is-python3 clang clang-tools \
                     python3-packaging # To build from source of TensorFlow
 
 step "Get YAPF"
-sudo apt install -y python3-yapf
+sudo nala install -y python3-yapf
 [ -d ${HOME}/.config/yapf ] || mkdir -p ${HOME}/.config/yapf
 cat <<EOF | tee ${HOME}/.config/yapf/style
 [style]
@@ -92,24 +94,24 @@ conda config --set auto_activate_base false
 step "Get CUDA"
 wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb
 sudo dpkg -i cuda-keyring_1.0-1_all.deb
-sudo apt update
+sudo nala update
 #sudo apt install -y cuda-drivers
 #sudo apt install -y cuda-11-8
-sudo apt install -y cuda libcudnn8 libcudnn8-dev
+sudo nala install -y cuda libcudnn8 libcudnn8-dev
 sudo sed -E 's;PATH="?(.+)";PATH="/usr/local/cuda/bin:\1";g' -i /etc/environment
 
 step "Install Bazel"
-sudo apt install -y apt-transport-https curl gnupg
+sudo nala install -y apt-transport-https curl gnupg
 curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel-archive-keyring.gpg
 sudo mv bazel-archive-keyring.gpg /usr/share/keyrings
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-sudo apt update
-sudo apt install -y bazel
+sudo nala update
+sudo nala install -y bazel
 
 step "Install Podman"
-sudo apt update
-sudo apt upgrade -y
-sudo apt install -y podman
+sudo nala update
+sudo nala upgrade -y
+sudo nala install -y podman
 sudo sed -E 's;# unqualified-search-registries = \["example.com"\];unqualified-search-registries = \["docker.io"\];1' -i /etc/containers/registries.conf
 
 step "Install nvidia-container-runtime"
@@ -119,8 +121,8 @@ sudo mv nvidia-container-runtime.gpg /etc/apt/trusted.gpg.d/
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \
   sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
-sudo apt update
-sudo apt install -y nvidia-container-runtime
+sudo nala update
+sudo nala install -y nvidia-container-runtime
 sudo sed -i 's/^#no-cgroups = false/no-cgroups = true/;' /etc/nvidia-container-runtime/config.toml
 sudo mkdir -p /usr/share/containers/oci/hooks.d
 cat <<EOF | sudo tee /usr/share/containers/oci/hooks.d/oci-nvidia-hook.json
