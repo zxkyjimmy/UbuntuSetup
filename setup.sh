@@ -28,9 +28,8 @@ git config --global pull.rebase false
 step "Get useful commands"
 sudo apt update
 sudo apt install -y git curl zsh wget htop vim tree openssh-server lm-sensors \
-                    cmake tmux python3-pip python-is-python3
-sudo apt install -y clang clang-tools
-sudo apt install -y python3-packaging # To build from source of TensorFlow
+                    cmake tmux python3-pip python-is-python3 clang clang-tools \
+                    python3-packaging # To build from source of TensorFlow
 
 step "Get YAPF"
 sudo apt install -y python3-yapf
@@ -96,8 +95,7 @@ sudo dpkg -i cuda-keyring_1.0-1_all.deb
 sudo apt update
 #sudo apt install -y cuda-drivers
 #sudo apt install -y cuda-11-8
-sudo apt install -y cuda
-sudo apt install -y libcudnn8 libcudnn8-dev
+sudo apt install -y cuda libcudnn8 libcudnn8-dev
 sudo sed -E 's;PATH="?(.+)";PATH="/usr/local/cuda/bin:\1";g' -i /etc/environment
 
 step "Install Bazel"
