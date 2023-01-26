@@ -12,10 +12,14 @@ sudo locale-gen en_US.UTF-8
 sudo locale-gen zh_TW.UTF-8
 export LC_ALL=en_US.UTF-8
 
-step "Update all packages"
+step "Install nala"
 sudo apt update
-sudo apt upgrade -y
-sudo apt autoremove -y
+sudo apt install -y nala
+
+step "Update all packages"
+sudo nala update
+sudo nala upgrade -y
+sudo nala autoremove -y
 
 step "Stop unattended upgrade"
 sudo sed -E 's;APT::Periodic::Unattended-Upgrade "1"\;;APT::Periodic::Unattended-Upgrade "0"\;;g' -i /etc/apt/apt.conf.d/20auto-upgrades
@@ -26,8 +30,6 @@ git config --global user.email "zxkyjimmy@gmail.com"
 git config --global pull.rebase false
 
 step "Get useful commands"
-sudo apt update
-sudo apt install -y nala
 sudo nala update
 sudo nala install -y git curl zsh wget htop vim tree openssh-server lm-sensors \
                     cmake tmux python3-pip python-is-python3 clang clang-tools \
