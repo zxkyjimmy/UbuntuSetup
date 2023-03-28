@@ -36,7 +36,7 @@ sudo apt install -y python3-yapf
 [ -d ${HOME}/.config/yapf ] || mkdir -p ${HOME}/.config/yapf
 cat <<EOF | tee ${HOME}/.config/yapf/style
 [style]
-based_on_style = yapf
+based_on_style = google
 EOF
 
 step "Pip install protobuf"
