@@ -21,20 +21,20 @@ ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -q -N "" <<< y
 echo "" # newline
 
 step "Get Font"
-FONTBASE=https://github.com/ryanoasis/nerd-fonts/raw/5454877c01e5efb4b902151655f75d950678dc34/patched-fonts
-wget $FONTBASE/SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete%20Mono.ttf
-wget $FONTBASE/SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete.ttf
-wget $FONTBASE/CascadiaCode/Regular/complete/Caskaydia%20Cove%20Nerd%20Font%20Complete%20Mono%20Regular.otf
-wget $FONTBASE/CascadiaCode/Regular/complete/Caskaydia%20Cove%20Nerd%20Font%20Complete%20Regular.otf
+FONT_VERSION="2.3.3"
+FONT_NAME="CascadiaCode"
 mkdir -p ~/.local/share/fonts
-cp *.ttf ~/.local/share/fonts
-cp *.otf ~/.local/share/fonts
+wget https://github.com/ryanoasis/nerd-fonts/releases/download/v${FONT_VERSION}/${FONT_NAME}.zip
+mkdir -p ${FONT_NAME}
+unzip ${FONT_NAME}.zip -d ${FONT_NAME}
+find -type f -name '*Windows*' -delete
+cp -r ${FONT_NAME} ~/.local/share/fonts
 fc-cache -f -v
 
 step "Tweak theme and terminal"
 PROFILE_ID=$( gsettings get org.gnome.Terminal.ProfilesList default | xargs echo )
 dconf write /org/gnome/terminal/legacy/profiles:/:${PROFILE_ID}/use-system-font false
-dconf write /org/gnome/terminal/legacy/profiles:/:${PROFILE_ID}/font "'SauceCodePro Nerd Font Mono Regular 14'"
+dconf write /org/gnome/terminal/legacy/profiles:/:${PROFILE_ID}/font "'CaskaydiaCove Nerd Font Regular 14'"
 
 step "Get oh-my-zsh"
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
