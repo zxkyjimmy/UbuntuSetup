@@ -63,7 +63,7 @@ fc-cache -f -v
 step "Tweak theme and terminal"
 PROFILE_ID=$( gsettings get org.gnome.Terminal.ProfilesList default | xargs echo )
 dconf write /org/gnome/terminal/legacy/profiles:/:${PROFILE_ID}/use-system-font false
-dconf write /org/gnome/terminal/legacy/profiles:/:${PROFILE_ID}/font "'CaskaydiaCove Nerd Font Regular 14'"
+dconf write /org/gnome/terminal/legacy/profiles:/:${PROFILE_ID}/font "'CaskaydiaCove Nerd Font 14'"
 
 step "Get oh-my-zsh"
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
