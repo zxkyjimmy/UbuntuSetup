@@ -113,12 +113,6 @@ sudo apt install -y podman
 sudo sed -E 's;# unqualified-search-registries = \["example.com"\];unqualified-search-registries = \["docker.io"\];1' -i /etc/containers/registries.conf
 
 step "Install nvidia-container-runtime"
-curl -fsSL https://nvidia.github.io/nvidia-container-runtime/gpgkey | \
-  gpg --dearmor > nvidia-container-runtime.gpg
-sudo mv nvidia-container-runtime.gpg /etc/apt/trusted.gpg.d/
-distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \
-  sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
 sudo apt update
 sudo apt install -y nvidia-container-runtime
 sudo sed -i 's/^#no-cgroups = false/no-cgroups = true/;' /etc/nvidia-container-runtime/config.toml
