@@ -81,6 +81,7 @@ plugins=(
   git
   zsh-autosuggestions
   zsh-syntax-highlighting
+  conda-zsh-completion
 )
 autoload -U compinit && compinit
 
