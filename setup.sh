@@ -27,7 +27,7 @@ git config --global pull.rebase false
 
 step "Get useful commands"
 sudo apt update
-sudo apt install -y git curl zsh wget htop vim tree openssh-server lm-sensors \
+sudo apt install -y git gh curl zsh wget htop vim tree openssh-server lm-sensors \
                     cmake tmux python3-pip python-is-python3 clang clang-tools \
                     python3-packaging # To build from source of TensorFlow
 
